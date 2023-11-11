@@ -1,1 +1,7 @@
-﻿
+﻿  3016 30 Percent.cpp
+C:\Users\grogf\OneDrive\Documents\Games Development\Year 3\COMP3016 - Immersive Game Technologies\3016 30 Percent\3016 30 Percent\3016 30 Percent.cpp(391,32): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+C:\Users\grogf\OneDrive\Documents\Games Development\Year 3\COMP3016 - Immersive Game Technologies\3016 30 Percent\3016 30 Percent\3016 30 Percent.cpp(399,32): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\grogf\OneDrive\Documents\Games Development\Year 3\COMP3016 - Immersive Game Technologies\3016 30 Percent\3016 30 Percent\3016 30 Percent.cpp(421,22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Character.cpp
+  Generating Code...
+  3016 30 Percent.vcxproj -> C:\Users\grogf\OneDrive\Documents\Games Development\Year 3\COMP3016 - Immersive Game Technologies\3016 30 Percent\x64\Debug\3016 30 Percent.exe

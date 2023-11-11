@@ -1,0 +1,5 @@
+elf 40 5 3 7
+viking 70 7 5 3
+goblin 48 4 1 8
+wizard 40 9 2 6
+ogre 100 10 4 0

@@ -9,6 +9,7 @@ void CombatHUD();
 void Moving();
 void CreateMonster();
 void LevelUp();
+void CheckHP();
 
 
 int monsterHp = 0, monsterExp = 0, monsterLevel = 0, monsterAttack = 0, monsterHeal = 0, monsterSlain = 0;
@@ -57,13 +58,13 @@ void Intro()
 {
 	system("cls");
 	//type_text("Welcome to The Dragon's Den. ");
-	type_text("In the depths of a dangerous cavern, you must face a horde of creatures and monsters of all sizes. Each vanquished beast brings you closer to the fearsome Dragon.");
+	//type_text("In the depths of a dangerous cavern, you must face a horde of creatures and monsters of all sizes. Each vanquished beast brings you closer to the fearsome Dragon.");
 }
 
 void HUD()
 {
 	//The UI that shows throughout the game
-	Sleep(3000);
+	//Sleep(3000);
 	system("cls");
 	if (character.hp <= 0)
 	{
@@ -84,7 +85,7 @@ void CombatHUD()
 	}
 	std::cout << "Name:	" << character.name
 		<< "		|		Monster Name: " << currentMonster
-		<< "\nHealth: " << character.totalHealth
+		<< "\nHealth: " << character.hp
 		<< "		|		Monster Health: " << monsterHp
 		<< "\nLevel: " << character.level
 		<< "		|		Monster Level : " << monsterLevel
@@ -100,10 +101,9 @@ void Combat()
 	CombatHUD();
 	int playerAction;
 	int playerDamage = character.attack;
-	//monsterAttack = 6 * monsterLevel / 2;
+	CheckHP();
 
-
-	if (character.totalHealth >= 1 && monsterHp >= 1)
+	if (character.hp >= 1 && monsterHp >= 1)
 	{
 		std::cout << "\n";
 		std::cout << "1. Attack\n";
@@ -126,21 +126,22 @@ void Combat()
 				int damageTaken = monsterAttack - character.defence;
 				if (damageTaken > 0) {
 					character.hp -= damageTaken;
+					CheckHP();
 				}
 				else if (damageTaken <= 0)
 				{
-					character.hp -= damageTaken;
+					std::cout << "The monster's attack could not penetrate your defence\n";
 				}
 				else {
 					// If the character's defense is higher than the monster's attack, no damage is taken.
 				}
-				if (character.totalHealth <= 0)
+				if (character.hp <= 0)
 				{
 					std::cout << "You took " << damageTaken << " damage. Your health is now 0  " << std::endl;
 				}
 				else
 				{
-					std::cout << "You took " << damageTaken << " damage. Your health is now " << character.totalHealth << std::endl;
+					std::cout << "You took " << damageTaken << " damage. Your health is now " << character.hp << std::endl;
 				}
 				hasRested = false;
 				// if monster is Vampire, they can restore health upon attacking
@@ -149,16 +150,9 @@ void Combat()
 					monsterHp = monsterHp + monsterHeal;
 					std::cout << "The Vampire Drained your Health! They Healed for " << monsterHeal << "!" << std::endl;
 				}
-				// Change to function
-				if (character.totalHealth <= 0)
-				{
-					character.totalHealth = 0;
-					Sleep(2000);
-					system("cls");
-					std::cout << "You died :(\nYou were level " << character.level << ". You were killed by a level " << monsterLevel << " " << currentMonster << std::endl;
-					Sleep(2000);
-					exit(0);
-				}
+
+				CheckHP();
+
 
 			}
 			else if (monsterHp <= 0)
@@ -193,15 +187,15 @@ void Combat()
 				std::cout << "You successfully Blocked the incoming Attack!\n";
 				character.heal = 5;
 				std::cout << "You managed to Heal whilst Guarding for " << character.heal << std::endl;
-				character.totalHealth = character.totalHealth + character.heal;
+				character.hp = character.hp+ character.heal;
 				Sleep(2000);
 				Combat();
 			}
 			else
 			{
 				std::cout << "You failed to Block the incoming Attack!\n";
-				character.totalHealth = character.totalHealth - monsterAttack;
-				std::cout << "You were Attacked from behind from failing to Block and suffered " << monsterAttack << " .Your Current HP is " << character.totalHealth << std::endl;
+				character.hp = character.hp - monsterAttack;
+				std::cout << "You were Attacked from behind from failing to Block and suffered " << monsterAttack << " .Your Current HP is " << character.hp << std::endl;
 				if (currentMonster == "Vampire")
 				{
 					monsterHp = monsterHp + monsterHeal;
@@ -210,9 +204,9 @@ void Combat()
 				Sleep(2000);
 				Combat();
 			}
-			if (character.totalHealth <= 0)
+			if (character.hp <= 0)
 			{
-				character.totalHealth = 0;
+				character.hp = 0;
 				Sleep(2000);
 				system("cls");
 				std::cout << "You died :(\nYou were level " << character.level << ". You were killed by a level " << monsterLevel << " " << currentMonster << std::endl;
@@ -229,14 +223,15 @@ void Combat()
 			if (x >= 50)
 			{
 				std::cout << "You successfully Ran away";
+				Sleep(2000);
 				HUD();
 			}
 			else
 			{
 				std::cout << "You failed to Run\n";
 				std::cout << currentMonster << " Attacks you as you try to Run!\n";
-				character.totalHealth -= monsterAttack + 10;
-				std::cout << "You took " << monsterAttack + 10 << " Damage! Your current Health is " << character.totalHealth << std::endl;
+				character.hp -= monsterAttack + 10;
+				std::cout << "You took " << monsterAttack + 10 << " Damage! Your current Health is " << character.hp << std::endl;
 				if (currentMonster == "Vampire")
 				{
 					monsterHp = monsterHp + monsterHeal;
@@ -245,9 +240,9 @@ void Combat()
 				Sleep(3000);
 				Combat();
 			}
-			if (character.totalHealth <= 0)
+			if (character.hp <= 0)
 			{
-				character.totalHealth = 0;
+				character.hp = 0;
 				Sleep(2000);
 				system("cls");
 				std::cout << "You died :(\nYou were level " << character.level << ". You were killed by a level " << monsterLevel << " " << currentMonster << std::endl;
@@ -305,28 +300,38 @@ void Moving()
 				}
 				else {
 					std::cout << "You move forward and find nothing of interest.\n";
+					Sleep(2000);
 					HUD(); 
 				}
 				choiceMade = true;
 			}
 			else if (choice == 2) {
-				if (!hasRested)
+				if (!hasRested && character.hp < character.maxHealth)
 				{
 					std::cout << "You set up camp and rest for the night\n";
+					Sleep(2000);
 					if (character.hp <= character.maxHealth)
 					{
 						character.heal = character.level * 10 / 2;
 						//character.totalHealth = character.totalHealth + 10 * character.level;
 						character.hp += character.heal;
 					}
-					std::cout << "By resting, you healed up, your current health is now " << character.totalHealth << std::endl;
+					else
+					{
+						std::cout << "You cannot heal past your max health";
+						Sleep(2000);
+						HUD();
+					}
+					std::cout << "By resting, you healed up by " << character.heal << ", your current health is now " << character.hp << std::endl;
 					Sleep(3000);
 					hasRested = true;
 					HUD();
 				}
 				else {
 					std::cout << "I have already rested today, I must venture onwards" << std::endl;
+					Sleep(2000);
 					HUD(); // Call your HUD function
+
 				}
 				choiceMade = true;
 			}
@@ -335,17 +340,17 @@ void Moving()
 				std::cout << "You move backwards...\n";
 				if (temp >= 50) {
 					// Encountering a monster
-					CreateMonster(); // Call your CreateMonster function
+					CreateMonster(); // Call  CreateMonster function
 					std::string tempName = "AnotherMonster"; // Update with the generated monster name
 					std::cout << "A " << tempName << " appears! Prepare to fight!\n";
 					currentMonster = tempName; // Update the current monster name
 					temp = 0;
 					Sleep(3000);
-					Combat(); // Call your Combat function
+					Combat(); // Call  Combat function
 				}
 				else {
 					std::cout << "You find nothing of worth\n";
-					hasRested = false; // Commented out in your code; uncomment if necessary
+					hasRested = false;
 					HUD(); // Call your HUD function
 				}
 			}
@@ -366,34 +371,49 @@ void Moving()
 	}
 }
 
+void CheckHP()
+{
+	if (character.hp <= 0)
+	{
+		character.hp = 0;
+		Sleep(2000);
+		system("cls");
+		std::cout << "You died :(\nYou were level " << character.level << ". You were killed by a level " << monsterLevel << " " << currentMonster << std::endl;
+		Sleep(2000);
+		exit(0);
+	}
+}
 void LevelUp()
 {
-
-	if (character.currentXp >= character.xpToLevel)
-	{
-		character.xpToLevel += floor(character.level + 25 * pow(2, character.level / 7));
-		character.totalHealth = floor(character.totalHealth + 13 * pow(2, character.level / 8));
-
-		if (character.level >= character.minLevel && character.level <= character.maxLevel)
+	int xpHeal;
+		if (character.currentXp >= character.xpToLevel)
 		{
-			character.level++;
-			character.attack += 3;
-			character.defence += 3;
+			character.xpToLevel += floor(character.level + 25 * pow(2, character.level / 7));
+			//character.hp = floor(character.hp + 13 * pow(2, character.level / 8));
+
+			if (character.level >= character.minLevel && character.level <= character.maxLevel)
+			{
+				character.level++;
+				character.attack += 3;
+				character.defence += 1;
+				character.maxHealth = floor(character.maxHealth + 13 * pow(2, character.level / 8));
+				xpHeal = character.maxHealth - character.hp;
+				character.hp += xpHeal;
+
+			}
+			else
+			{
+				character.level = 10;
+			}
+
+			std::cout << "You Levelled up! You are now level " << character.level << std::endl;
+			std::cout << "Your Max HP has increased to " << character.hp << std::endl;
+			std::cout << "\n";
+			Sleep(2000);
+			LevelUp();
 		}
-		else
-		{
-			character.level = 60;
-		}
-		character.maxHealth = character.totalHealth;
-		std::cout << "You Levelled up! You are now level " << character.level << std::endl;
-		std::cout << "Your Max HP has increased to " << character.totalHealth << std::endl;
-		std::cout << "\n";
-		Sleep(2000);
-		LevelUp();
-	}
 	Sleep(3000);
 	HUD();
-
 }
 
 void CreateMonster() {
@@ -407,7 +427,10 @@ void CreateMonster() {
 	currentMonster = monsterName[randomIndex];
 
 	monsterLevel = (rand() % (character.level + 1));
-
+	if (monsterLevel == 0)
+	{
+		monsterLevel++;
+	}
 	monsterHp += monsterLevel;
 
 	if (monsterSlain == 3)
@@ -422,38 +445,38 @@ void CreateMonster() {
 	}
 	if (currentMonster == "Witch")
 	{
-		monsterHp = 40;
+		monsterHp = 40 + (monsterLevel * 5);
 		monsterAttack = 6 + monsterLevel;
 		monsterExp = 5 * monsterLevel;
 	}
 	else if (currentMonster == "Demon")
 	{
-		monsterHp = 30;
+		monsterHp = 30 + (monsterLevel * 5);
 		monsterAttack = 8 + monsterLevel;
 		monsterExp = 5 * monsterLevel;
 	}
 	else if (currentMonster == "Hellhound")
 	{
-		monsterHp = 30;
+		monsterHp = 30 + (monsterLevel * 5);
 		monsterAttack = 7 + monsterLevel;
 		monsterExp = 5 * monsterLevel;
 	}
 	else if (currentMonster == "Centaur")
 	{
-		monsterHp = 35 * (1 + (monsterLevel /10));
+		monsterHp = 35 + (monsterLevel * 5);
 		monsterAttack = 4 * (1 + (monsterLevel / 10));
 		monsterExp = 5 * monsterLevel;
 	}
 	else if (currentMonster == "Vampire")
 	{
-		monsterHp = 25;
+		monsterHp = 25 + (monsterLevel * 5);
 		monsterAttack = 5 + monsterLevel;
 		monsterHeal = 2 + monsterLevel;
 		monsterExp = 5 * monsterLevel;
 	}
 	else if (currentMonster == "Dragon")
 	{
-		monsterHp = 50;
+		monsterHp = 50 + (monsterLevel * 5);
 		monsterAttack = 10 + monsterLevel;
 		monsterExp = 10 * monsterLevel;
 	}
