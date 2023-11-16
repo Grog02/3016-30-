@@ -4,6 +4,7 @@
 
 void HUD();
 void Intro();
+void Outro();
 void Combat();
 void CombatHUD();
 void Moving();
@@ -12,9 +13,10 @@ void LevelUp();
 void CheckHP();
 
 
-int monsterHp = 0, monsterExp = 0, monsterLevel = 0, monsterAttack = 0, monsterHeal = 0, monsterSlain = 0;
+int monsterHp = 0, monsterExp = 0, monsterLevel = 0, monsterAttack = 0, monsterDefence = 0, monsterHeal = 0, monsterSlain = 0;
 bool hasRested = false;
 bool bossActive = false;
+bool bossSlain = false;
 bool choiceMade = false;
 std::string monsterName[] = { "Witch", "Demon", "Hellhound", "Centaur", "Vampire" };
 std::string boss = "Dragon";
@@ -37,9 +39,6 @@ int main()
 	return 0;
 }
 
-
-
-
 void type_text(const std::string& text)
 {
 	// loop through each character in the text
@@ -57,20 +56,27 @@ void type_text(const std::string& text)
 void Intro()
 {
 	system("cls");
-	//type_text("Welcome to The Dragon's Den. ");
-	//type_text("In the depths of a dangerous cavern, you must face a horde of creatures and monsters of all sizes. Each vanquished beast brings you closer to the fearsome Dragon.");
+	type_text("Welcome to The Dragon's Den. ");
+	type_text("You are a hero on a quest of obtaining a bountiful treasure guarded by a powerful Dragon!");
+	type_text("In the depths of a dangerous cavern, you must face a horde of creatures and monsters of all sizes. Each vanquished beast brings you closer to the fearsome Dragon.");
+}
+
+void Outro()
+{
+	system("cls");
+	type_text("You have slain the Dragon Boss ");
+	type_text("In the depths of a dangerous cavern, you must face a horde of creatures and monsters of all sizes. Each vanquished beast brings you closer to the fearsome Dragon.");
 }
 
 void HUD()
 {
 	//The UI that shows throughout the game
-	//Sleep(3000);
 	system("cls");
 	if (character.hp <= 0)
 	{
 		character.hp = 0;
 	}
-	std::cout << "Name: " << character.name << "\nHealth: " << character.hp << "\nRace: " << character.race << "\nSex: " << character.sex
+	std::cout << "Name: " << character.name << "\nHealth: " << character.hp << "\nClass: " << character.race << "\nSex: " << character.sex
 		<< "\nLevel: " << character.level << "\nXP: " << character.currentXp << "\nXP to Level Up: " << character.xpToLevel << std::endl;
 	Moving();
 }
@@ -92,6 +98,7 @@ void CombatHUD()
 		<< "	\nAttack: " << character.attack
 		<< "		|		Monster Attack: " << monsterAttack
 		<< " \nDefense: " << character.defence
+		<< "		|		Monster Defence: " << monsterDefence
 		<< std::endl;
 
 }
@@ -115,6 +122,7 @@ void Combat()
 		// if player attacks
 		if (playerAction == 1)
 		{
+			int monsterDamageTaken = character.attack - monsterDefence;
 			std::cout << "Attacking!... You did " << playerDamage << " damage to " << currentMonster << std::endl;
 			monsterHp = monsterHp - playerDamage;
 			Sleep(3000);
@@ -131,6 +139,7 @@ void Combat()
 				else if (damageTaken <= 0)
 				{
 					std::cout << "The monster's attack could not penetrate your defence\n";
+					damageTaken = 0;
 				}
 				else {
 					// If the character's defense is higher than the monster's attack, no damage is taken.
@@ -163,7 +172,8 @@ void Combat()
 				Sleep(3000);
 				std::cout << "\n";
 				std::cout << "You defeated " << currentMonster << ". You gained " << monsterExp << " XP\nCongratulations!";
-				monsterSlain++;
+				//monsterSlain++;
+				monsterSlain += 3;
 				hasRested = false;
 				if (character.level != character.maxLevel)
 				{
@@ -273,7 +283,6 @@ void Moving()
 	std::cout << "\n\n";
 	std::cout << "1. Move forward\n";
 	std::cout << "2. Rest\n";
-	std::cout << "3. Move backwards\n";
 	std::cout << "\n";
 
 	while (!choiceMade)
@@ -334,25 +343,6 @@ void Moving()
 
 				}
 				choiceMade = true;
-			}
-			else if (choice == 3) {
-				temp = (rand() % 100) + 1;
-				std::cout << "You move backwards...\n";
-				if (temp >= 50) {
-					// Encountering a monster
-					CreateMonster(); // Call  CreateMonster function
-					std::string tempName = "AnotherMonster"; // Update with the generated monster name
-					std::cout << "A " << tempName << " appears! Prepare to fight!\n";
-					currentMonster = tempName; // Update the current monster name
-					temp = 0;
-					Sleep(3000);
-					Combat(); // Call  Combat function
-				}
-				else {
-					std::cout << "You find nothing of worth\n";
-					hasRested = false;
-					HUD(); // Call your HUD function
-				}
 			}
 			else
 			{
@@ -447,30 +437,35 @@ void CreateMonster() {
 	{
 		monsterHp = 40 + (monsterLevel * 5);
 		monsterAttack = 6 + monsterLevel;
+		monsterDefence = 1 + monsterLevel;
 		monsterExp = 5 * monsterLevel;
 	}
 	else if (currentMonster == "Demon")
 	{
 		monsterHp = 30 + (monsterLevel * 5);
 		monsterAttack = 8 + monsterLevel;
+		monsterDefence = 1 + monsterLevel;
 		monsterExp = 5 * monsterLevel;
 	}
 	else if (currentMonster == "Hellhound")
 	{
 		monsterHp = 30 + (monsterLevel * 5);
 		monsterAttack = 7 + monsterLevel;
+		monsterDefence = 1 + monsterLevel;
 		monsterExp = 5 * monsterLevel;
 	}
 	else if (currentMonster == "Centaur")
 	{
 		monsterHp = 35 + (monsterLevel * 5);
 		monsterAttack = 4 * (1 + (monsterLevel / 10));
+		monsterDefence = 1 + monsterLevel;
 		monsterExp = 5 * monsterLevel;
 	}
 	else if (currentMonster == "Vampire")
 	{
 		monsterHp = 25 + (monsterLevel * 5);
 		monsterAttack = 5 + monsterLevel;
+		monsterDefence = 1 + monsterLevel;
 		monsterHeal = 2 + monsterLevel;
 		monsterExp = 5 * monsterLevel;
 	}
@@ -478,14 +473,15 @@ void CreateMonster() {
 	{
 		monsterHp = 50 + (monsterLevel * 5);
 		monsterAttack = 10 + monsterLevel;
+		monsterDefence = 1 + monsterLevel;
 		monsterExp = 10 * monsterLevel;
 	}
 
-	std::cout << "Created monster with name: " << currentMonster << std::endl;
+	std::cout << "You Encountered a : " << currentMonster << std::endl;
 	std::cout << "Monster HP: " << monsterHp << std::endl;
 	std::cout << "Monster Level: " << monsterLevel << std::endl;
 	std::cout << "Monster Attack: " << monsterAttack << std::endl;
-	//std::cout << "Monster Experience: " << monsterExp << std::endl;
+	std::cout << "Monster Defence: " << monsterDefence << std::endl;
 	Sleep(3000);
 	Combat();
 }

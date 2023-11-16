@@ -12,7 +12,7 @@ Character::Character()
 	invalidRace;
 	level = 0, hp = 0, /*totalHealth = 0,*/ maxHealth = 0, heal = 0, attack = 0, defence = 7;
 
-	level = 1, currentXp = 0, xpToLevel = 1, minLevel = 1, maxLevel = 10;
+	level = 1, currentXp = 0, xpToLevel = 10, minLevel = 1, maxLevel = 10;
 
 
 }
@@ -30,13 +30,13 @@ void Character::CharacterCreation()
 	std::getline(std::cin, name);
 
 
-	std::cout << "Enter Character's race\n";
+	std::cout << "Enter Character's class\n";
 	std::cout << "Elf\n";
 	std::cout << "Viking\n";
 	std::cout << "Goblin\n";
 	std::cout << "Wizard\n";
 	std::cout << "Ogre\n";
-	std::cout << "Type your race below: \n\n";
+	std::cout << "Type your class below: \n\n";
 	std::getline(std::cin, race);
 
 
@@ -46,7 +46,8 @@ void Character::CharacterCreation()
 
 
 	if (file.is_open()) {
-		while (file >> raceFromFile >> hpFromFile >> attackFromFile >> defenceFromFile) {
+		while (file >> raceFromFile >> hpFromFile >> attackFromFile >> defenceFromFile) 
+		{
 			// Convert the race input to lowercase
 			std::transform(race.begin(), race.end(), race.begin(), ::tolower);
 
@@ -65,7 +66,7 @@ void Character::CharacterCreation()
 		file.close();
 	}
 	else {
-		std::cout << "Unable to open CharacterStats.txt" << std::endl;
+		std::cout << "Unable to open stats.txt" << std::endl;
 		Sleep(2000);
 		//return; // Exit the function if the file cannot be opened
 	}
@@ -74,9 +75,9 @@ void Character::CharacterCreation()
 	if (!validRace) {
 		std::cout << "Invalid race choice. You will be a Human" << std::endl;
 		race = "Human";
-		hp = 25;
-		maxHealth= 25;
-		attack = 3;
+		hp = 30;
+		maxHealth= 30;
+		attack = 4;
 		defence = 3;
 	}
 
