@@ -34,9 +34,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\..\..\..\..\Desktop\char stats\CharacterStats.txt">
-      <Filter>Data</Filter>
-    </Text>
     <Text Include="stats.txt" />
   </ItemGroup>
 </Project>
