@@ -3,6 +3,7 @@
 
 
 void HUD();
+void SlowText(const std::string& text);
 void Intro();
 void Outro();
 void Combat();
@@ -31,7 +32,7 @@ int main()
 {
 
 	character.CharacterCreation();
-	Intro();
+	//Intro();
 	HUD();
 	Moving();
 
@@ -39,7 +40,7 @@ int main()
 	return 0;
 }
 
-void type_text(const std::string& text)
+void SlowText(const std::string& text)
 {
 	// loop through each character in the text
 	for (std::size_t i = 0; i < text.size(); ++i)
@@ -56,16 +57,20 @@ void type_text(const std::string& text)
 void Intro()
 {
 	system("cls");
-	type_text("Welcome to The Dragon's Den. ");
-	type_text("You are a hero on a quest of obtaining a bountiful treasure guarded by a powerful Dragon!");
-	type_text("In the depths of a dangerous cavern, you must face a horde of creatures and monsters of all sizes. Each vanquished beast brings you closer to the fearsome Dragon.");
+	SlowText("Welcome to The Dragon's Den.\n"); 
+	SlowText("You are a hero on a quest of obtaining a bountiful treasure guarded by a powerful Dragon!\n");
+	SlowText("In the depths of a dangerous cavern, you must face a horde of creatures and monsters of all sizes. Each vanquished beast brings you closer to the fearsome and powerful Dragon.");
 }
 
 void Outro()
 {
 	system("cls");
-	type_text("You have slain the Dragon Boss ");
-	type_text("In the depths of a dangerous cavern, you must face a horde of creatures and monsters of all sizes. Each vanquished beast brings you closer to the fearsome Dragon.");
+	SlowText("Congratulations Mighty Warrior! You have slain the mighty Dragon Boss.\n");
+	SlowText("As the Dragon's last roar fades out and it slumps to the ground defeated, you face the treasure it once guarded.\n");
+	SlowText("The treasure consists of beautiful rubies and jewels and they glisten as you claim the rewards.\n");
+	SlowText("After claiming the gems you triumphantly leave the Dungeon never to return...\n");
+	Sleep(2000);
+	exit(0);
 }
 
 void HUD()
@@ -125,7 +130,7 @@ void Combat()
 			int monsterDamageTaken = character.attack - monsterDefence;
 			std::cout << "Attacking!... You did " << playerDamage << " damage to " << currentMonster << std::endl;
 			monsterHp = monsterHp - playerDamage;
-			Sleep(3000);
+			//Sleep(3000);
 			CombatHUD();
 			if (monsterHp >= 1)
 			{
@@ -172,8 +177,12 @@ void Combat()
 				Sleep(3000);
 				std::cout << "\n";
 				std::cout << "You defeated " << currentMonster << ". You gained " << monsterExp << " XP\nCongratulations!";
-				//monsterSlain++;
-				monsterSlain += 3;
+				if (currentMonster == "Dragon")
+				{
+					Sleep(3000);
+					Outro();
+				}
+				monsterSlain ++;
 				hasRested = false;
 				if (character.level != character.maxLevel)
 				{
@@ -423,7 +432,7 @@ void CreateMonster() {
 	}
 	monsterHp += monsterLevel;
 
-	if (monsterSlain == 3)
+	if (monsterSlain == 5)
 	{
 		currentMonster = "Dragon";
 		bossActive = true;
