@@ -1,6 +1,5 @@
 #include "Character.h"
-
-
+using namespace std;
 
 Character::Character()
 {
@@ -22,34 +21,34 @@ void Character::CharacterCreation()
 
 	int counter = 0;
 	bool validRace = false; // check if a valid race was found
-	std::string raceFromFile;
+	::string raceFromFile;
 	int hpFromFile, attackFromFile, defenceFromFile;
 
 	//player information for character creation
-	std::cout << "Enter Character's name: ";
-	std::getline(std::cin, name);
+	::cout << "Enter Character's name: ";
+	::getline(::cin, name);
 
 
-	std::cout << "Enter Character's class\n";
-	std::cout << "Elf\n";
-	std::cout << "Viking\n";
-	std::cout << "Goblin\n";
-	std::cout << "Wizard\n";
-	std::cout << "Ogre\n";
-	std::cout << "Type your class below: \n\n";
-	std::getline(std::cin, race);
+	::cout << "Enter Character's class\n";
+	::cout << "Elf\n";
+	::cout << "Viking\n";
+	::cout << "Goblin\n";
+	::cout << "Wizard\n";
+	::cout << "Ogre\n";
+	::cout << "Type your class below: \n\n";
+	::getline(::cin, race);
 
 
-	std::transform(race.begin(), race.end(), race.begin(), ::tolower); // Convert the input to lowercase
+	::transform(race.begin(), race.end(), race.begin(), ::tolower); // Convert the input to lowercase
 
-	std::ifstream file("stats.txt");
+	::ifstream file("stats.txt");
 
 
 	if (file.is_open()) {
 		while (file >> raceFromFile >> hpFromFile >> attackFromFile >> defenceFromFile) 
 		{
 			// Convert the race input to lowercase
-			std::transform(race.begin(), race.end(), race.begin(), ::tolower);
+			::transform(race.begin(), race.end(), race.begin(), ::tolower);
 
 			// Check if the input race matches the one read from the file
 			if (race == raceFromFile) {
@@ -66,14 +65,14 @@ void Character::CharacterCreation()
 		file.close();
 	}
 	else {
-		std::cout << "Unable to open stats.txt" << std::endl;
+		::cout << "Unable to open stats.txt" << ::endl;
 		Sleep(2000);
 		//return; // Exit the function if the file cannot be opened
 	}
 
 	// If the race is not found, default to Human
 	if (!validRace) {
-		std::cout << "Invalid race choice. You will be a Human" << std::endl;
+		::cout << "Invalid race choice. You will be a Human" << ::endl;
 		race = "Human";
 		hp = 30;
 		maxHealth= 30;
@@ -83,9 +82,9 @@ void Character::CharacterCreation()
 
 
 
-	std::cout << "\n";
-	std::cout << "Enter Character's sex: ";
-	std::getline(std::cin, sex);
+	::cout << "\n";
+	::cout << "Enter Character's sex: ";
+	::getline(::cin, sex);
 
 	// Loading screen 
 	system("cls");
@@ -95,19 +94,19 @@ void Character::CharacterCreation()
 
 		if (i == 0)
 		{
-			std::cout << "Creating Character.\n";
-			std::cout << "---->                   O\n";
+			::cout << "Creating Character.\n";
+			::cout << "---->                   O\n";
 
 		}
 		if (i == 1)
 		{
-			std::cout << "Creating Character..\n";
-			std::cout << "--------------->        O\n";
+			::cout << "Creating Character..\n";
+			::cout << "--------------->        O\n";
 		}
 		if (i == 2)
 		{
-			std::cout << "Creating Character...\n";
-			std::cout << "----------------------->O\n";
+			::cout << "Creating Character...\n";
+			::cout << "----------------------->O\n";
 			Sleep(500);
 			break;
 		}
