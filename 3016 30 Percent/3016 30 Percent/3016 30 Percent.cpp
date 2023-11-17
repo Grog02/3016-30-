@@ -14,7 +14,7 @@ void Moving();
 void CreateMonster();
 void LevelUp();
 void CheckHP();
-void MonsterHP();
+void CheckMonsterHP();
 
 // Declaring Monster Stats 
 int monsterHp = 0, monsterExp = 0, monsterLevel = 0, monsterAttack = 0, monsterDefence = 0, monsterHeal = 0, monsterSlain = 0;
@@ -36,7 +36,7 @@ Character character;
 int main()
 {
 	character.CharacterCreation();
-	Intro();
+	//Intro();
 	HUD();
 	Moving();
 
@@ -57,10 +57,12 @@ void SlowText(const string& text)
 // Text to be displayed as if typed out for both the Intro and Outro to the Game
 void Intro()
 {
+	cin.ignore();
 	system("cls");
 	SlowText("Welcome to The Dragon's Den.\n"); 
 	SlowText("You are a hero on a quest of obtaining a bountiful treasure guarded by a powerful Dragon!\n");
-	SlowText("In the depths of a dangerous cavern, you must face a horde of creatures and monsters of all sizes. Each vanquished beast brings you closer to the fearsome and powerful Dragon.\n");
+	SlowText("In the depths of a dangerous cavern, you must face a horde of creatures and monsters of all sizes.\n");
+	SlowText("Each vanquished beast brings you closer to the fearsome and powerful Dragon.\n");
 	Sleep(2000);
 }
 
@@ -115,7 +117,6 @@ void Combat()
 {
 	CombatHUD();
 	int playerAction;
-	int playerDamage = character.attack;
 	CheckHP();
 
 	if (character.hp >= 1 && monsterHp >= 1)
@@ -130,13 +131,17 @@ void Combat()
 		// if player attacks
 		if (playerAction == 1)
 		{
+			cout << "Attacking!... You did " << character.attack << " damage to " << currentMonster << endl;
 			int monsterDamageTaken = character.attack - monsterDefence;
-			if (monsterDamageTaken> 0) {
+			if (monsterDamageTaken > 0) {
 				monsterHp -= monsterDamageTaken;
-				MonsterHP();
 			}
-			cout << "Attacking!... You did " << playerDamage << " damage to " << currentMonster << endl;
-			monsterHp = monsterHp - playerDamage;
+			else
+			{
+				monsterHp = monsterHp - character.attack;
+				CheckMonsterHP();
+			}
+			Sleep(2000);
 			CombatHUD();
 			//Sleep(3000);
 			if (monsterHp >= 1)
@@ -174,7 +179,7 @@ void Combat()
 			}
 			else if (monsterHp <= 0)
 			{
-				MonsterHP();
+				CheckMonsterHP();
 			}
 			Sleep(2000);
 			Combat();
@@ -281,12 +286,13 @@ void Moving()
 	{
 		string input;
 		cin >> input;
+		
 
 		// convert input to int
 		if (isdigit(input[0])) {
 			choice = stoi(input);
-
 			if (choice == 1) {
+				//cin.ignore(INT_MAX, '\n');
 				temp = (rand() % 100) + 1;
 				cout << "You move forward...\n";
 				if (temp >= 50) {
@@ -363,20 +369,28 @@ void CheckHP()
 	}
 }
 
-void MonsterHP()
+void CheckMonsterHP()
 {
-	monsterHp = 0;
-	CombatHUD();
-	Sleep(3000);
-	cout << "\n";
-	cout << "You defeated " << currentMonster << ". You gained " << monsterExp << " XP\nCongratulations!";
-	if (currentMonster == "Dragon")
+	if (monsterHp <= 0)
 	{
+		monsterHp = 0;
+		CombatHUD();
 		Sleep(3000);
-		Outro();
+		cout << "\n";
+		cout << "You defeated " << currentMonster << ". You gained " << monsterExp << " XP\nCongratulations!";
+		monsterSlain++;
+		hasRested = false;
+		if (currentMonster == "Dragon")
+		{
+			Sleep(3000);
+			Outro();
+		}
 	}
-	monsterSlain++;
-	hasRested = false;
+	else
+	{
+
+	}
+
 	if (character.level != character.maxLevel)
 	{
 		character.currentXp = character.currentXp + monsterExp;
