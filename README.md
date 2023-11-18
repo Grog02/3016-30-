@@ -32,4 +32,4 @@ Invalid input. Please enter a valid integer choice.
 ### Creating Character
 ![image](https://github.com/Grog02/3016-30-/assets/91668510/aefa3f77-cc41-49d8-8346-42f2ee2b2b85)
 
-The first error handlind section of this screenshot is for if the file cannot be found, the game shuts down. Also if the player inputs something that isn't in the available shown classes, they are given Human.
+The first error handling section of this screenshot is for if the file cannot be found, the game shuts down. Also if the player inputs something that isn't in the available shown classes, they are given Human.
