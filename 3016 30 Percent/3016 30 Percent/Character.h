@@ -13,7 +13,7 @@ public:
 	std::string invalidRace = "Human";
 	std::vector<std::string> playerRace;
 	int hp, /*totalHealth*/ maxHealth, heal, attack, defence;
-
+	 
 	int level, currentXp, baseXp, xpToLevel, minLevel, maxLevel;
 	void CharacterCreation();
 };

@@ -67,6 +67,7 @@ void Character::CharacterCreation()
 	else {
 		::cout << "Unable to open stats.txt" << ::endl;
 		Sleep(2000);
+		exit(0);
 		//return; // Exit the function if the file cannot be opened
 	}
 

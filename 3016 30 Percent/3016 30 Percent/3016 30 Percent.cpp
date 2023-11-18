@@ -53,11 +53,9 @@ void SlowText(const string& text)
 		Sleep(50); 
 	}
 }
-
 // Text to be displayed as if typed out for both the Intro and Outro to the Game
 void Intro()
 {
-	cin.ignore();
 	system("cls");
 	SlowText("Welcome to The Dragon's Den.\n"); 
 	SlowText("You are a hero on a quest of obtaining a bountiful treasure guarded by a powerful Dragon!\n");
@@ -95,7 +93,7 @@ void CombatHUD()
 	// The UI that shows when the player is in combat
 	Sleep(500);
 	system("cls");
-	if (character.hp <= 0)
+		if (character.hp <= 0)
 	{
 		CheckHP();
 	}
@@ -424,6 +422,7 @@ void CheckMonsterHP()
 	Sleep(2000);
 	HUD();
 }
+
 void LevelUp()
 {
 	int xpHeal;
@@ -435,8 +434,8 @@ void LevelUp()
 			if (character.level >= character.minLevel && character.level <= character.maxLevel)
 			{
 				character.level++;
-				character.attack += 3;
-				character.defence += 1;
+				character.attack = character.attack + 3;
+				character.defence = character.defence + 1;
 				character.maxHealth = floor(character.maxHealth + 13 * pow(2, character.level / 8));
 				xpHeal = character.maxHealth - character.hp;
 				character.hp += xpHeal;
@@ -475,7 +474,7 @@ void CreateMonster() {
 		monsterLevel++;
 	}
 	monsterHp += monsterLevel;
-
+ 
 	// if the player has slain enough monsters then they can face the boss
 	if (monsterSlain == 5)
 	{
