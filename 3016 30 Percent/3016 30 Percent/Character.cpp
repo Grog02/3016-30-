@@ -76,7 +76,7 @@ void Character::CharacterCreation()
 		race = "Human";
 		hp = 30;
 		maxHealth= 30;
-		attack = 4;
+		attack = 6;
 		defence = 3;
 	}
 

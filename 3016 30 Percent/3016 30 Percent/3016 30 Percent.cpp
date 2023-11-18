@@ -36,7 +36,7 @@ Character character;
 int main()
 {
 	character.CharacterCreation();
-	//Intro();
+	Intro();
 	HUD();
 	Moving();
 
@@ -49,7 +49,7 @@ void SlowText(const string& text)
 	// loop through each character in the text
 	for (size_t i = 0; i < text.size(); ++i)
 	{
-		cout << text[i] << flush;
+		::cout << text[i] << flush;
 		Sleep(50); 
 	}
 }
@@ -85,7 +85,7 @@ void HUD()
 	{
 		CheckHP();
 	}
-	cout << "Name: " << character.name << "\nHealth: " << character.hp << "\nClass: " << character.race << "\nSex: " << character.sex
+	::cout << "Name: " << character.name << "\nHealth: " << character.hp << "\nClass: " << character.race << "\nSex: " << character.sex
 		<< "\nLevel: " << character.level << "\nXP: " << character.currentXp << "\nXP to Level Up: " << character.xpToLevel << endl;
 	Moving();
 }
@@ -99,7 +99,7 @@ void CombatHUD()
 	{
 		CheckHP();
 	}
-	cout << "Name:	" << character.name
+	::cout << "Name:	" << character.name
 		<< "		|		Monster Name: " << currentMonster
 		<< "\nHealth: " << character.hp
 		<< "		|		Monster Health: " << monsterHp
@@ -121,34 +121,36 @@ void Combat()
 
 	if (character.hp >= 1 && monsterHp >= 1)
 	{
-		cout << "\n";
-		cout << "1. Attack\n";
-		cout << "2. Guard\n";
-		cout << "3. Flee\n";
-		cout << "\n";
+		::cout << "\n";
+		::cout << "1. Attack\n";
+		::cout << "2. Guard\n";
+		::cout << "3. Flee\n";
+		::cout << "\n";
 		cin >> playerAction;
 
 		// if player attacks
 		if (playerAction == 1)
 		{
-			cout << "Attacking!... You did " << character.attack << " damage to " << currentMonster << endl;
+
 			int monsterDamageTaken = character.attack - monsterDefence;
 			if (monsterDamageTaken > 0) {
-				monsterHp -= monsterDamageTaken;
+				monsterHp = monsterHp -  monsterDamageTaken;
 			}
 			else
 			{
 				monsterHp = monsterHp - character.attack;
-				CheckMonsterHP();
-			}
+			}	
+			::cout << "Attacking!... You did " << monsterDamageTaken << " damage to " << currentMonster << endl;
+			//CheckMonsterHP();
 			Sleep(2000);
+
 			CombatHUD();
 			//Sleep(3000);
 			if (monsterHp >= 1)
 			{
 				// if monster is not dead, it can attack
-				cout << "\n";
-				cout << currentMonster << " is Attacking!.. \n";
+				::cout << "\n";
+				::cout << currentMonster << " is Attacking!.. \n";
 				// if player's defence is higher than monster's attack then the monster deals no damage
 				int damageTaken = monsterAttack - character.defence;
 				if (damageTaken > 0) {
@@ -157,23 +159,23 @@ void Combat()
 				}
 				else if (damageTaken <= 0)
 				{
-					cout << "The monster's attack could not penetrate your defence\n";
+					::cout << "The monster's attack could not penetrate your defence\n";
 					damageTaken = 0;
 				}
 				if (character.hp <= 0)
 				{
-					cout << "You took " << damageTaken << " damage. Your health is now 0  " << endl;
+					::cout << "You took " << damageTaken << " damage. Your health is now 0  " << endl;
 				}
 				else
 				{
-					cout << "You took " << damageTaken << " damage. Your health is now " << character.hp << endl;
+					::cout << "You took " << damageTaken << " damage. Your health is now " << character.hp << endl;
 				}
 				hasRested = false;
 				// if monster is Vampire, they can restore health after attacking
 				if (currentMonster == "Vampire")
 				{
 					monsterHp = monsterHp + monsterHeal;
-					cout << "The Vampire Drained your Health! They Healed for " << monsterHeal << "!" << endl;
+					::cout << "The Vampire Drained your Health! They Healed for " << monsterHeal << "!" << endl;
 				}
 				CheckHP();
 			}
@@ -188,28 +190,44 @@ void Combat()
 		// if player attempts to guard
 		else if (playerAction == 2)
 		{
-			cout << "Blocking\n";
+			::cout << "Blocking\n";
 			int i = rand() % 100 + 1;
 			if (i >= 50)
 			{
-				cout << "You successfully Blocked the incoming Attack!\n";
+				::cout << "You successfully Blocked the incoming Attack!\n";
 				character.heal = 5 * character.level;
 				Sleep(2000);
-				cout << "You managed to Heal whilst Guarding for " << character.heal << endl;
-				character.hp = character.hp+ character.heal;
+				if (character.maxHealth == character.hp)
+				{
+					::cout << "You cannot heal as you are at full health" << endl;
+				}
+				else
+				{
+					if (character.race == "Wizard")
+					{
+						::cout << "You managed to Heal whilst Guarding for " << character.heal + 2<< endl;
+						character.hp = character.hp + character.heal + 2;
+					}
+					else
+					{
+						::cout << "You managed to Heal whilst Guarding for " << character.heal << endl;
+						character.hp = character.hp + character.heal;
+					}
+				}
+
 				Sleep(2000);
 				Combat();
 			}
 			else
 			{
 				// if player fails to block attack, they take extra damage and the defence stat is not used because of this
-				cout << "You failed to Block the incoming Attack!\n";
+				::cout << "You failed to Block the incoming Attack!\n";
 				character.hp = character.hp - monsterAttack;
-				cout << "You were Attacked from behind from failing to Block and suffered " << monsterAttack << " .Your Current HP is " << character.hp << endl;
+				::cout << "You were Attacked from behind from failing to Block and suffered " << monsterAttack << " .Your Current HP is " << character.hp << endl;
 				if (currentMonster == "Vampire")
 				{
 					monsterHp = monsterHp + monsterHeal;
-					cout << "The Vampire Drained your Health! They Healed for " << monsterHeal << "!" << endl;
+					::cout << "The Vampire Drained your Health! They Healed for " << monsterHeal << "!" << endl;
 				}
 				Sleep(2000);
 				Combat();
@@ -223,11 +241,11 @@ void Combat()
 		// if player runs
 		else if (playerAction == 3)
 		{
-			cout << "You attempt to Run\n";
+			::cout << "You attempt to Run\n";
 			int x = rand() % 100 + 1;
 			if (x >= 50)
 			{
-				cout << "You successfully Ran away";
+				::cout << "You successfully Ran away";
 				Sleep(2000);
 				HUD();
 			}
@@ -235,18 +253,25 @@ void Combat()
 			{
 				if (currentMonster == "Dragon")
 				{
-					cout << "You cannot run from the Dragon!";
+					::cout << "You cannot run from the Dragon!";
 				}
 				else
 				{
-					cout << "You failed to Run\n";
-					cout << currentMonster << " Attacks you as you try to Run!\n";
-					character.hp -= monsterAttack + 10;
-					cout << "You took " << monsterAttack + 10 << " Damage! Your current Health is " << character.hp << endl;
+					::cout << "You failed to Run\n";
+					::cout << currentMonster << " Attacks you as you try to Run!\n";
+					character.hp -= monsterAttack + 5;
+					if (character.hp <= 0)
+					{
+						::cout << "You took " << monsterAttack + 5 << " Damage! Your current Health is " << 0 << endl;
+					}
+					else
+					{
+						::cout << "You took " << monsterAttack + 5 << " Damage! Your current Health is " << character.hp << endl;
+					}
 					if (currentMonster == "Vampire")
 					{
 						monsterHp = monsterHp + monsterHeal;
-						cout << "The Vampire Drained your Health! They Healed for " << monsterHeal << "!" << endl;
+						::cout << "The Vampire Drained your Health! They Healed for " << monsterHeal << "!" << endl;
 					}
 				}
 				Sleep(3000);
@@ -261,7 +286,7 @@ void Combat()
 		// Invalid action
 		else
 		{
-			cout << "Invalid Action";
+			::cout << "Invalid Action";
 			Sleep(500);
 			cin.clear();
 			cin.ignore(INT_MAX, '\n');
@@ -277,10 +302,10 @@ void Moving()
 	int choice;
 	int temp;
 
-	cout << "\n\n";
-	cout << "1. Move forward\n";
-	cout << "2. Rest\n";
-	cout << "\n";
+	::cout << "\n\n";
+	::cout << "1. Move forward\n";
+	::cout << "2. Rest\n";
+	::cout << "\n";
 
 	while (!choiceMade)
 	{
@@ -294,18 +319,18 @@ void Moving()
 			if (choice == 1) {
 				//cin.ignore(INT_MAX, '\n');
 				temp = (rand() % 100) + 1;
-				cout << "You move forward...\n";
+				::cout << "You move forward...\n";
 				if (temp >= 50) {
 					// Encountering a monster
 					CreateMonster(); 
 					string currentMonster = "SomeMonster"; 
-					cout << "A " << currentMonster << " appears! Prepare to fight!\n";
+					::cout << "A " << currentMonster << " appears! Prepare to fight!\n";
 					Sleep(3000);
 					hasRested = false;
 					Combat(); 
 				}
 				else {
-					cout << "You move forward and find nothing of interest.\n";
+					::cout << "You move forward and find nothing of interest.\n";
 					Sleep(2000);
 					HUD(); 
 				}
@@ -315,7 +340,7 @@ void Moving()
 				// Player can only rest after performing an action, this stops players abusing the heal option
 				if (!hasRested && character.hp < character.maxHealth)
 				{
-					cout << "You set up camp and rest for the night\n";
+					::cout << "You set up camp and rest for the night\n";
 					Sleep(2000);
 					if (character.hp <= character.maxHealth)
 					{
@@ -324,17 +349,17 @@ void Moving()
 					}
 					else
 					{
-						cout << "You cannot heal past your max health";
+						::cout << "You cannot heal past your max health";
 						Sleep(2000);
 						HUD();
 					}
-					cout << "By resting, you healed up by " << character.heal << ", your current health is now " << character.hp << endl;
+					::cout << "By resting, you healed up by " << character.heal << ", your current health is now " << character.hp << endl;
 					Sleep(3000);
 					hasRested = true;
 					HUD();
 				}
 				else {
-					cout << "I have already rested today, I must venture onwards" << endl;
+					::cout << "I have already rested today, I must venture onwards" << endl;
 					Sleep(2000);
 					HUD(); 
 
@@ -343,13 +368,13 @@ void Moving()
 			}
 			else
 			{
-				cout << "Invalid Choice\n" << endl;
+				::cout << "Invalid Choice\n" << endl;
 				cin.clear();
 				cin.ignore(INT_MAX, '\n');
 			}
 			choiceMade = true;
 		}
-		cout << "Invalid input. Please enter a valid integer choice.\n";
+		::cout << "Invalid input. Please enter a valid integer choice.\n";
 		choiceMade = false;
 		
 	}
@@ -362,8 +387,8 @@ void CheckHP()
 		character.hp = 0;
 		Sleep(2000);
 		system("cls");
-		cout << "You died :(\nYou were level " << character.level << ". You were killed by a level " << monsterLevel << " " << currentMonster << endl;
-		cout << "\nYou killed " << monsterSlain << " Monsters before being defeated" << endl;
+		::cout << "You died :(\nYou were level " << character.level << ". You were killed by a level " << monsterLevel << " " << currentMonster << endl;
+		::cout << "\nYou killed " << monsterSlain << " Monsters before being defeated" << endl;
 		Sleep(2000);
 		exit(0);
 	}
@@ -375,9 +400,9 @@ void CheckMonsterHP()
 	{
 		monsterHp = 0;
 		CombatHUD();
-		Sleep(3000);
-		cout << "\n";
-		cout << "You defeated " << currentMonster << ". You gained " << monsterExp << " XP\nCongratulations!";
+		Sleep(1000);
+		::cout << "\n";
+		::cout << "You defeated " << currentMonster << ". You gained " << monsterExp << " XP\nCongratulations!";
 		monsterSlain++;
 		hasRested = false;
 		if (currentMonster == "Dragon")
@@ -388,7 +413,7 @@ void CheckMonsterHP()
 	}
 	else
 	{
-
+		CombatHUD();
 	}
 
 	if (character.level != character.maxLevel)
@@ -422,9 +447,9 @@ void LevelUp()
 				character.level = 10;
 			}
 
-			cout << "You Levelled up! You are now level " << character.level << endl;
-			cout << "Your Max HP has increased to " << character.hp << endl;
-			cout << "\n";
+			::cout << "You Levelled up! You are now level " << character.level << endl;
+			::cout << "Your Max HP has increased to " << character.hp << endl;
+			::cout << "\n";
 			Sleep(2000);
 			LevelUp();
 		}
@@ -486,8 +511,8 @@ void CreateMonster() {
 	else if (currentMonster == "Centaur")
 	{
 		monsterHp = 35 + (monsterLevel * 5);
-		monsterAttack = 4 * (1 + (monsterLevel / 10));
-		monsterDefence = 1 + monsterLevel;
+		monsterAttack = 5 + monsterLevel;
+		monsterDefence = 2 + monsterLevel;
 		monsterExp = 5 * monsterLevel;
 	}
 	else if (currentMonster == "Vampire")
@@ -502,19 +527,19 @@ void CreateMonster() {
 	{
 		monsterHp = 50 + (monsterLevel * 5);
 		monsterAttack = 10 + monsterLevel;
-		monsterDefence = 1 + monsterLevel;
+		monsterDefence = 3 + monsterLevel;
 		monsterExp = 10 * monsterLevel;
 	}
 
 	if (currentMonster == "Dragon")
 	{
-		cout << "The Mighty Dragon Boss appears! You must slay it in order to retrieve the treasure!\n";
+		::cout << "The Mighty Dragon Boss appears! You must slay it in order to retrieve the treasure!\n";
 	}
-	cout << "You Encountered a : " << currentMonster << endl;
-	cout << "Monster HP: " << monsterHp << endl;
-	cout << "Monster Level: " << monsterLevel << endl;
-	cout << "Monster Attack: " << monsterAttack << endl;
-	cout << "Monster Defence: " << monsterDefence << endl;
+	::cout << "You Encountered a : " << currentMonster << endl;
+	::cout << "Monster HP: " << monsterHp << endl;
+	::cout << "Monster Level: " << monsterLevel << endl;
+	::cout << "Monster Attack: " << monsterAttack << endl;
+	::cout << "Monster Defence: " << monsterDefence << endl;
 	Sleep(3000);
 	Combat();
 }
