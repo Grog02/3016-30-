@@ -2,4 +2,4 @@ elf 40 8 4
 viking 42 7 5
 goblin 38 9 3
 wizard 40 10 1
-ogre 36 40 3
+ogre 36 12 3
